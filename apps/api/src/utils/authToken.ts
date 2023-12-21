@@ -2,11 +2,10 @@ import sanitizedConfig from "config";
 import { NextFunction, Response } from "express";
 import jwt from "jsonwebtoken";
 import { ApiError } from "./error";
-import { IApiResponse } from "@codernex/types";
 import { Admin, User } from "@/models";
 
 export const sendToken = (
-  res: Response<IApiResponse<unknown>>,
+  res: Response,
   user: User | Admin,
   next: NextFunction
 ) => {
@@ -26,19 +25,8 @@ export const sendToken = (
     );
   }
 
-  const { password, ...userWithoutPass } = user;
-
-  res
-    .cookie("token", token, {
-      sameSite: "lax",
-      httpOnly: true,
-      maxAge: 60 * 60 * 1000 * 24 * 365,
-    })
-    .status(200)
-    .json({
-      data: {
-        user: userWithoutPass,
-        accessToken: token,
-      },
-    });
+  res.status(200).json({
+    user,
+    accessToken: token,
+  });
 };

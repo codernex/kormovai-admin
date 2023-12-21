@@ -1,166 +1,31 @@
 import {
-  TbBrandProducthunt,
   TbSettings2,
-  TbReportAnalytics,
   TbUsersGroup,
-  TbTruckReturn,
-  TbTruckDelivery,
+  TbCashBanknote,
+  TbCards,
 } from "react-icons/tb";
-import { MdOutlinePointOfSale } from "react-icons/md";
+import { FaIdCardAlt } from "react-icons/fa";
 
-export const navigation = [
+export const navigation: {
+  title: string;
+  icon: React.ElementType;
+  href: string;
+}[] = [
   {
-    title: "POS",
-    icon: MdOutlinePointOfSale,
-    submenu: [
-      {
-        title: "All Products",
-        href: "",
-      },
-      {
-        title: "Create Product",
-        href: "",
-      },
-      {
-        title: "All Products",
-        href: "",
-      },
-      {
-        title: "Create Product",
-        href: "",
-      },
-    ],
+    title: "Payments",
+    icon: TbCashBanknote,
+    href: "payments",
   },
   {
-    title: "Products",
-    icon: TbBrandProducthunt,
-    submenu: [
-      {
-        title: "All Products",
-        href: "/products",
-      },
-      {
-        title: "Create Product",
-        href: "/products/create",
-      },
-      {
-        title: "Units",
-        href: "/units",
-      },
-      {
-        title: "Categories",
-        href: "/categories",
-      },
-    ],
+    title: "Deposits",
+    icon: TbCards,
+    href: "deposits",
   },
-  {
-    title: "Purchases",
-    icon: TbTruckReturn,
-    submenu: [
-      {
-        title: "All Products",
-        href: "",
-      },
-      {
-        title: "Create Product",
-        href: "",
-      },
-      {
-        title: "All Products",
-        href: "",
-      },
-      {
-        title: "Create Product",
-        href: "",
-      },
-    ],
-  },
-  {
-    title: "Sell",
-    icon: TbTruckDelivery,
-    submenu: [
-      {
-        title: "All Products",
-        href: "",
-      },
-      {
-        title: "Create Product",
-        href: "",
-      },
-      {
-        title: "All Products",
-        href: "",
-      },
-      {
-        title: "Create Product",
-        href: "",
-      },
-    ],
-  },
-  {
-    title: "User Management",
-    icon: TbUsersGroup,
-    submenu: [
-      {
-        title: "All Products",
-        href: "",
-      },
-      {
-        title: "Create Product",
-        href: "",
-      },
-      {
-        title: "All Products",
-        href: "",
-      },
-      {
-        title: "Create Product",
-        href: "",
-      },
-    ],
-  },
-  {
-    title: "Reports",
-    icon: TbReportAnalytics,
-    submenu: [
-      {
-        title: "All Products",
-        href: "",
-      },
-      {
-        title: "Create Product",
-        href: "",
-      },
-      {
-        title: "All Products",
-        href: "",
-      },
-      {
-        title: "Create Product",
-        href: "",
-      },
-    ],
-  },
+  { title: "Users", icon: TbUsersGroup, href: "users" },
+  { title: "Memebership", icon: FaIdCardAlt, href: "membership" },
   {
     title: "Settings",
     icon: TbSettings2,
-    submenu: [
-      {
-        title: "All Products",
-        href: "",
-      },
-      {
-        title: "Create Product",
-        href: "",
-      },
-      {
-        title: "All Products",
-        href: "",
-      },
-      {
-        title: "Create Product",
-        href: "",
-      },
-    ],
+    href: "settings",
   },
 ];

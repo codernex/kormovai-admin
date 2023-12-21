@@ -1,3 +1,5 @@
+import { User, Payment, Deposit } from "../../../apps/api/src/models";
+
 export type HttpStatusCode = 200 | 201 | 203 | 404 | 401 | 403 | 500;
 
 export interface IApiError {
@@ -10,10 +12,10 @@ export interface IApiResponse<T> {
   error?: T extends IApiError ? T : never;
 }
 
-export interface IUser {
-  id: string;
-  name: string;
-}
+export interface Ipayment extends Payment {}
+
+export interface IUser extends User {}
+export interface IDeposit extends Deposit {}
 
 export enum UserRole {
   admin = "admin",

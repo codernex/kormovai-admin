@@ -2,33 +2,18 @@ import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { TbBrandTabler } from "react-icons/tb";
 import { navigation } from "./nav";
-import { Link } from "react-router-dom";
-import React, { useCallback, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import React from "react";
 import { AnimatePresence, motion, Variants } from "framer-motion";
-import { HiChevronDown, HiChevronRight } from "react-icons/hi2";
 import { useSidebar } from "@/hooks/useSidebar";
 
 export const Sidebar: React.FC = React.memo(() => {
-  const [activeSubMenu, setActiveSubmenu] = useState<number | null>(null);
+  const naivagte = useNavigate();
+  const path = useLocation().pathname.slice(1);
 
-  const handleSubmenu = useCallback(
-    (i: number | null) => {
-      if (activeSubMenu !== null) {
-        if (activeSubMenu === i) {
-          setActiveSubmenu(null);
-        } else {
-          setActiveSubmenu(i);
-        }
-      } else {
-        setActiveSubmenu(i);
-      }
-    },
-    [activeSubMenu]
-  );
-
-  const { isSidebarActive, action } = useSidebar();
+  const { isSidebarActive } = useSidebar();
   const sidebarVariants = {
-    initial: { width: 80, opacity: 0, x: "-300" },
+    initial: { width: 250, opacity: 1, x: 0 },
     animate: {
       width: 250,
       x: 0,
@@ -61,7 +46,7 @@ export const Sidebar: React.FC = React.memo(() => {
     <AnimatePresence>
       <motion.aside
         className={cn(
-          "px-6 border-r border-slate-700  py-4 relative text-neutral-600 dark:text-slate-400"
+          "px-6 border-r border-slate-700  py-4 relative text-neutral-600 dark:text-slate-300"
         )}
         variants={sidebarVariants}
         initial="initial"
@@ -89,60 +74,23 @@ export const Sidebar: React.FC = React.memo(() => {
                   <div
                     className="cursor-pointer flex justify-between items-center"
                     onClick={() => {
-                      handleSubmenu(i);
-                      action(true);
+                      naivagte(item.href);
                     }}
                   >
-                    <div className="flex gap-x-2">
-                      <item.icon className="text-xl" />
+                    <div
+                      className={cn(
+                        "flex gap-x-2 w-full px-2 py-1 items-center",
+                        path === item.href
+                          ? "bg-slate-100 rounded-[5px] text-slate-700"
+                          : ""
+                      )}
+                    >
+                      <item.icon size={20} className="text-xl" />
                       {isSidebarActive && (
                         <p className="font-semibold">{item.title}</p>
                       )}
                     </div>
-                    <span>
-                      {isSidebarActive &&
-                        item.submenu.length &&
-                        (activeSubMenu === i ? (
-                          <HiChevronDown />
-                        ) : (
-                          <HiChevronRight />
-                        ))}
-                    </span>
                   </div>
-
-                  <AnimatePresence>
-                    {item.submenu && isSidebarActive && activeSubMenu === i ? (
-                      <motion.div
-                        initial={{
-                          opacity: 0,
-                        }}
-                        animate={{
-                          opacity: 1,
-                          transition: {
-                            delay: 0.1,
-                            duration: 0.7,
-                            ease: "easeIn",
-                          },
-                        }}
-                        exit={{
-                          transition: {
-                            ease: "easeOut",
-                          },
-                        }}
-                        className="ml-7 flex flex-col space-y-3"
-                      >
-                        {item.submenu.map((sub, index) => {
-                          return (
-                            <div className="mt-2" key={index}>
-                              <Link to={sub.href}>{sub.title}</Link>
-                            </div>
-                          );
-                        })}
-                      </motion.div>
-                    ) : (
-                      ""
-                    )}
-                  </AnimatePresence>
                 </div>
               );
             })}

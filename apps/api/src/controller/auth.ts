@@ -1,4 +1,3 @@
-import { Controller } from "./base";
 import { Repository } from "typeorm";
 import { Admin, User } from "@/models";
 import { appDataSource } from "../orm.config";
@@ -47,25 +46,29 @@ export class AuthController {
 
   static userLogin = requestHandler(
     async (req, res, next) => {
-      const user = await AuthController.userRepository.findOne({
-        where: {
-          id: req.body.id,
-        },
-      });
+      try {
+        const user = await AuthController.userRepository.findOne({
+          where: {
+            id: req.body.id,
+          },
+        });
 
-      if (!user) {
-        return ApiError("Username or password invalid", 404, next);
+        if (!user) {
+          return ApiError("Username or password invalid", 404, next);
+        }
+
+        const isPasswordMatched = await bcrypt.compare(
+          req.body.password,
+          user.password
+        );
+
+        if (!isPasswordMatched) {
+          return ApiError("Username or password invalid", 404, next);
+        }
+        sendToken(res, user, next);
+      } catch (err) {
+        console.log(err);
       }
-
-      const isPasswordMatched = bcrypt.compareSync(
-        req.body.password,
-        user.password
-      );
-
-      if (!isPasswordMatched) {
-        return ApiError("Username or password invalid", 404, next);
-      }
-      sendToken(res, user, next);
     },
     {
       body: userLoginSchema,

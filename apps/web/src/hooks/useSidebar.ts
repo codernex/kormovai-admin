@@ -3,7 +3,6 @@ import { create } from "zustand";
 interface IUseSidebar {
   open: () => void;
   isSidebarActive: boolean;
-  action: (is: boolean) => void;
 }
 
 export const useSidebar = create<IUseSidebar>((set) => ({
@@ -12,5 +11,4 @@ export const useSidebar = create<IUseSidebar>((set) => ({
     set((state) => ({
       isSidebarActive: !state.isSidebarActive,
     })),
-  action: (is) => set({ isSidebarActive: is }),
 }));

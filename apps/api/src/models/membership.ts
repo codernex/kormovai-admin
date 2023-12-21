@@ -1,12 +1,11 @@
+import { MembershiType } from "@codernex/schema";
 import {
   Column,
   CreateDateColumn,
   Entity,
-  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { User } from "./user";
 
 @Entity()
 export class Membership {
@@ -16,14 +15,14 @@ export class Membership {
   @Column()
   name: string;
 
-  @Column()
-  amount: string;
+  @Column({ nullable: true })
+  amount: number;
 
-  @OneToOne(() => User, (u) => u.membership)
-  user: User;
+  @Column({ enum: MembershiType, default: MembershiType.free, type: "enum" })
+  type: MembershiType;
 
-  @Column()
-  renewalDate: Date;
+  @Column({ type: "date" })
+  duration: Date;
 
   @CreateDateColumn()
   createdAt: Date;

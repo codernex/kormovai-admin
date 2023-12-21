@@ -1,10 +1,12 @@
 import { requestHandler } from "helper";
 import { Controller } from "./base";
-import { User } from "@/models";
-import { createUserSchema } from "@codernex/schema";
+import { Account, Membership, User } from "@/models";
+import { MembershiType, createUserSchema } from "@codernex/schema";
 import * as bcrypt from "bcryptjs";
 import { ApiError, ErrorHandler, generateRandomString } from "@/utils";
 import { z } from "zod";
+import { appDataSource } from "orm.config";
+import { sendToken } from "utils/authToken";
 
 export class UserController extends Controller<User> {
   constructor() {
@@ -23,7 +25,21 @@ export class UserController extends Controller<User> {
     async (req, res, next) => {
       try {
         const user = new User();
-        user.id = generateRandomString(8);
+
+        // Initiating User Account
+        const account = new Account();
+        account.balance = 0;
+
+        await appDataSource.manager.save(account);
+
+        // adding membership
+        const membership = await appDataSource.manager.findOne(Membership, {
+          where: {
+            type: MembershiType.free,
+          },
+        });
+
+        user.id = generateRandomString(6);
         user.name = req.body.name;
         user.password = bcrypt.hashSync(req.body.password, 10);
         user.dob = req.body.dob;
@@ -32,24 +48,33 @@ export class UserController extends Controller<User> {
         user.occupation = req.body.occuption;
         user.fatherName = req.body.fatherName;
         user.motherName = req.body.motherName;
+        user.account = account;
+        user.nid = req.body.nid;
 
-        const referrerUser = await this.addRefer(req.body.referCode);
+        // Adding Membership
+        if (membership) {
+          user.membership = membership;
+        }
 
-        // Adding Referral Program
-        if (referrerUser) {
-          referrerUser.addReferral(user);
-          user.referrer = referrerUser;
-          await this.repository.save(referrerUser);
-        } else {
-          return ApiError("Refer code invalid", 404, next);
+        if (req.body.referCode) {
+          const referrerUser = await this.addRefer(req.body.referCode);
+
+          // Adding Referral Program
+          if (referrerUser) {
+            referrerUser.addReferral(user);
+            user.referrer = referrerUser;
+            await this.repository.save(referrerUser);
+          } else {
+            return ApiError("Refer code invalid", 404, next);
+          }
         }
 
         await this.repository.save(user);
 
-        res.status(201).json({
-          data: user,
-        });
+        sendToken(res, user, next);
       } catch (err) {
+        console.log(err);
+
         const body = err as ErrorHandler;
 
         return ApiError(body.message, 400, next);
@@ -107,6 +132,8 @@ export class UserController extends Controller<User> {
       relations: {
         referrals: true,
         referrer: true,
+        account: true,
+        membership: true,
       },
     });
   }

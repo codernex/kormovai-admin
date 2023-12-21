@@ -5,6 +5,7 @@ import { errorMiddleware } from "@/middleware";
 import { adminRoutes, authRoutes, userRoutes } from "@/routes";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import { membershipRoutes } from "routes/membership";
 
 const mountServer = async (app: Application) => {
   const server = app.listen(sanitizedConfig.PORT);
@@ -55,6 +56,7 @@ const mountServer = async (app: Application) => {
   app.use("/api/v1/users", userRoutes);
   app.use("/api/v1/admin", adminRoutes);
   app.use("/api/v1/auth", authRoutes);
+  app.use("/api/v1/membership", membershipRoutes);
 
   /**
    * Error Handling

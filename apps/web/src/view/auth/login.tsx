@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import { api } from "@/lib/utils";
 import { IApiError, IApiResponse, IUser } from "@codernex/types";
 import { useIsAuthenticated, useSignIn } from "react-auth-kit";
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosError } from "axios";
 import toast from "react-hot-toast";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useMemo } from "react";
@@ -42,19 +42,17 @@ export default function Login() {
       .post("/auth/admin", data)
       .then(
         (
-          res: AxiosResponse<
-            IApiResponse<{
-              accessToken: string;
-              user: IUser;
-            }>
-          >
+          res: IApiResponse<{
+            accessToken: string;
+            user: IUser;
+          }>
         ) => {
-          if (res.data.data) {
+          if (res.data) {
             signIn({
-              token: res.data.data.accessToken,
+              token: res.data.accessToken,
               tokenType: "Bearer",
               expiresIn: 60 * 24 * 365,
-              authState: res.data.data.user,
+              authState: res.data.user,
             });
             navigate("/", { replace: true });
           }

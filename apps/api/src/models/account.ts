@@ -17,7 +17,4 @@ export class Account {
 
   @Column({ default: 0 })
   pendingWithdraw: 0;
-
-  @OneToOne(() => User, (user) => user.account)
-  user: User;
 }

@@ -9,14 +9,17 @@ import {
   JoinTable,
   OneToOne,
   JoinColumn,
+  OneToMany,
 } from "typeorm";
 import { UserRole } from "@codernex/types";
 import { Membership } from "./membership";
 import { Account } from "./account";
+import { Deposit } from "./deposit";
+import { Payment } from "./payment";
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn("uuid")
   id: string;
 
   @Column({ nullable: true })
@@ -29,14 +32,14 @@ export class User {
   @Column({ type: "varchar" })
   mobile: string;
 
-  @Column({ select: false })
+  @Column()
   password: string;
 
   @Column()
   nid: string;
 
   @Column()
-  dob: Date;
+  dob: string;
 
   @Column()
   fatherName: string;
@@ -59,13 +62,24 @@ export class User {
   @Column({ default: 1 })
   level: number;
 
-  @OneToOne(() => Membership, (m) => m.user)
+  @OneToOne(() => Membership)
   @JoinColumn()
   membership: Membership;
 
-  @OneToOne(() => Account, (acc) => acc.user)
+  @OneToOne(() => Account)
   @JoinColumn()
   account: Account;
+  // Deposit
+  @OneToMany(() => Deposit, (d) => d.user, { cascade: true })
+  deposits: Deposit[];
+
+  // Payments
+
+  @OneToMany(() => Payment, (p) => p.user, { cascade: true })
+  payments: Payment[];
+
+  @Column({ nullable: true })
+  membershipRenewalData: Date;
 
   @CreateDateColumn()
   createdAt: Date;

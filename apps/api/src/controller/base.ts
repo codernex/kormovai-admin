@@ -11,7 +11,7 @@ export abstract class Controller<TEntity extends ObjectLiteral> {
   protected queryRunner = appDataSource.createQueryRunner();
   protected manager: EntityManager;
 
-  constructor(entity: any) {
+  constructor(entity: EntityTarget<TEntity>) {
     this.repository = appDataSource.getRepository(entity);
     this.manager = this.queryRunner.manager;
   }

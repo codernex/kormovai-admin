@@ -2,29 +2,39 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-
-import { UserRole } from "@codernex/types";
+import { User } from "./user";
 
 @Entity()
-export class Admin {
+export class Deposit {
   @PrimaryGeneratedColumn("uuid")
   id: string;
-  @Column()
-  username: string;
-  @Column()
-  name: string;
 
   @Column()
-  password: string;
+  amount: number;
+
   @Column()
-  email: string;
-  @Column({ enum: UserRole, type: "enum", default: UserRole.admin })
-  role: UserRole;
+  mobile: string;
+
+  @Column()
+  trxId: number;
+
+  @Column()
+  paymentMethod: string;
+
+  @Column()
+  status: string;
+
+  @Column({ type: "date" })
+  @ManyToOne(() => User, (user) => user.deposits)
+  user: User;
+
   @CreateDateColumn()
   createdAt: Date;
+
   @UpdateDateColumn()
   updatedAt: Date;
 }
