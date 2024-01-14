@@ -21,8 +21,8 @@ export class Membership {
   @Column({ enum: MembershiType, default: MembershiType.free, type: "enum" })
   type: MembershiType;
 
-  @Column({ type: "date" })
-  duration: Date;
+  @Column({ default: 1 })
+  duration: number;
 
   @CreateDateColumn()
   createdAt: Date;

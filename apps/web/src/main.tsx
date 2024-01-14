@@ -10,16 +10,14 @@ import { Provider } from "react-redux";
 import { store } from "./redux/index.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <AuthProvider authName="auth" authType="localstorage">
-        <BrowserRouter>
-          <ThemeProvider>
-            <App />
-            <Toaster position="top-center" />
-          </ThemeProvider>
-        </BrowserRouter>
-      </AuthProvider>
-    </Provider>
-  </React.StrictMode>
+  <Provider store={store}>
+    <AuthProvider authName="auth" authType="localstorage">
+      <BrowserRouter>
+        <ThemeProvider>
+          <App />
+          <Toaster position="top-center" />
+        </ThemeProvider>
+      </BrowserRouter>
+    </AuthProvider>
+  </Provider>
 );

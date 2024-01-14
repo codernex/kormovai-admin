@@ -1,6 +1,10 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
+import axios, {
+  AxiosError,
+  AxiosResponse,
+  InternalAxiosRequestConfig,
+} from "axios";
 import { IApiError, IApiResponse } from "@codernex/types";
 
 export function cn(...inputs: ClassValue[]) {
@@ -21,7 +25,7 @@ export const apiGet = async <T>(url: string) => {
     (resolve, reject: (error: IApiError) => void) => {
       api
         .get<IApiResponse<T>>(url)
-        .then((res) => {
+        .then((res: AxiosResponse<IApiResponse<T>>) => {
           resolve(res.data);
         })
         .catch((err: AxiosError<IApiResponse<IApiError>>) => {
@@ -31,4 +35,49 @@ export const apiGet = async <T>(url: string) => {
         });
     }
   );
+};
+
+export const apiPatch = async <T, TData>(url: string, data: TData) => {
+  return new Promise<IApiResponse<T>>((resolve, reject) => {
+    api
+      .patch<IApiResponse<T>>(url, data)
+      .then((res: AxiosResponse<IApiResponse<T>>) => {
+        resolve(res.data);
+      })
+      .catch((err: AxiosError<IApiResponse<IApiError>>) => {
+        if (err?.response?.data?.error) {
+          reject(err.response.data.error);
+        }
+      });
+  });
+};
+
+export const apiPost = async <T, TData>(url: string, data: TData) => {
+  return new Promise<IApiResponse<T>>((resolve, reject) => {
+    api
+      .post<IApiResponse<T>>(url, data)
+      .then((res: AxiosResponse<IApiResponse<T>>) => {
+        resolve(res.data);
+      })
+      .catch((err: AxiosError<IApiResponse<IApiError>>) => {
+        if (err?.response?.data?.error) {
+          reject(err.response.data.error);
+        }
+      });
+  });
+};
+
+export const apiDelete = async <T>(url: string) => {
+  return new Promise<IApiResponse<T>>((resolve, reject) => {
+    api
+      .delete<IApiResponse<T>>(url)
+      .then((res: AxiosResponse<IApiResponse<T>>) => {
+        resolve(res.data);
+      })
+      .catch((err: AxiosError<IApiResponse<IApiError>>) => {
+        if (err?.response?.data?.error) {
+          reject(err.response.data.error);
+        }
+      });
+  });
 };

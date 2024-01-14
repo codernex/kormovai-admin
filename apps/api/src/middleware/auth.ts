@@ -29,6 +29,8 @@ export const isAuthenticated = requestHandler<
       sanitizedConfig.JWT_SECRET
     ) as jwt.JwtPayload;
 
+    console.log(decodedData);
+
     req.admin = await adminController.findById(decodedData.id);
     req.user = await userController.findUserById(decodedData.id);
 
@@ -37,6 +39,8 @@ export const isAuthenticated = requestHandler<
     }
     next();
   } catch (err: any) {
+    console.log(err);
+
     return ApiError(err.message, 404, next);
   }
 });

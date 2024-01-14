@@ -2,7 +2,13 @@ import express, { Application } from "express";
 import sanitizedConfig from "./config";
 import { appDataSource } from "orm.config";
 import { errorMiddleware } from "@/middleware";
-import { adminRoutes, authRoutes, userRoutes } from "@/routes";
+import {
+  adminRoutes,
+  authRoutes,
+  depositRoutes,
+  paymentRoutes,
+  userRoutes,
+} from "@/routes";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { membershipRoutes } from "routes/membership";
@@ -18,7 +24,6 @@ const mountServer = async (app: Application) => {
   /**
    * Cors
    */
-  const whiteListed = ["http://localhost:5473", "http://127.0.0.1:5473"];
   app.use(cors());
 
   /**
@@ -57,7 +62,8 @@ const mountServer = async (app: Application) => {
   app.use("/api/v1/admin", adminRoutes);
   app.use("/api/v1/auth", authRoutes);
   app.use("/api/v1/membership", membershipRoutes);
-
+  app.use("/api/v1/payments", paymentRoutes);
+  app.use("/api/v1/deposits", depositRoutes);
   /**
    * Error Handling
    */

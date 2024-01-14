@@ -52,13 +52,20 @@ export enum MembershiType {
   "premium" = "premium",
 }
 export const createMembershipSchema = z.object({
-  name: z.string(),
+  name: z
+    .string()
+    .min(
+      4,
+      "Membership should have a valid type of name \n ex: Free Membership"
+    ),
   amount: z.number().optional(),
-  duration: z.string(),
+  duration: z.number().optional(),
   type: z.nativeEnum(MembershiType),
 });
 
 export const updateMembershipSchema = z.object({
   name: z.string().optional(),
   amount: z.number().optional(),
+  duration: z.number().optional(),
+  type: z.nativeEnum(MembershiType),
 });

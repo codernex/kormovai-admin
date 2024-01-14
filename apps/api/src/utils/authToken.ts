@@ -13,7 +13,7 @@ export const sendToken = (
     { id: user.id, email: user.email, name: user.name },
     sanitizedConfig.JWT_SECRET,
     {
-      expiresIn: 1000 * 60 * 60,
+      expiresIn: 1000 * 60 * 60 * 24 * 365,
     }
   );
 
